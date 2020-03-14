@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using ZXing;
 using ZXing.Common;
+using System;
 
 public class QRGenerator : MonoBehaviour
 {
     [SerializeField] Vector2Int qrDimension = new Vector2Int(512, 512);
-    [SerializeField] Renderer qrRenderer;
+    [SerializeField] Renderer qrRenderer = null;
 
     bool isDrawReady = false;
     string currentGUID = "";
@@ -44,7 +45,8 @@ public class QRGenerator : MonoBehaviour
     private string GenerateUniqueCode()
     {
         //add station ID, time and date stamp, passenger 4pins
-        System.Guid newId = System.Guid.NewGuid();
+        Guid newId = Guid.NewGuid();
+        Server.SaveToDabase(newId.ToString(), "alfredo123", StationNames.AYALA);
         return newId.ToString();
     }
 
