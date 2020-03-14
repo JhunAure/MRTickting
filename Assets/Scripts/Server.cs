@@ -98,11 +98,13 @@ public class Server
             else
             {
                 Debug.LogError("Error: Insufficient Balance");
+                StationGate.QRProcessed?.Invoke(false);
             }
         }
         else
         {
             Debug.LogError("Error: Passenger unknown");
+            StationGate.QRProcessed?.Invoke(false);
         }
     }
 
