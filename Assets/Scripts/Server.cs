@@ -8,31 +8,49 @@ public class Server
 {
     private const string DATA_LOCATION = "/Saves/Passenger Data/";
 
+    private static PassengerData GetPassengerData(string _guid)
+    {
+        string data = File.ReadAllText(Application.dataPath + DATA_LOCATION + _guid + ".txt");
+        PassengerData passenger = JsonUtility.FromJson<PassengerData>(data);
+        return passenger;
+    }
+
+    private static void SetPassengerData(string _guid, PassengerData newData)
+    {
+        string data = JsonUtility.ToJson(newData);
+        File.WriteAllText(Application.dataPath + DATA_LOCATION + _guid + ".txt", data);
+    }
+
+    private static bool IsPassengerExists(string _guid)
+    {
+        return File.Exists(Application.dataPath + DATA_LOCATION + _guid + ".txt");
+    }
+
     public static void SaveToDabase(string _guid, string _name, StationNames _stationName)
     {
-        if(!File.Exists(Application.dataPath + DATA_LOCATION + _guid +".txt"))
+        if(!IsPassengerExists(_guid))
         {
-            PassengerData newData = new PassengerData(){
+            PassengerData newData = new PassengerData()
+            {
                 guid = _guid,
                 name = _name,
                 stationIn = _stationName
             };
-            string data = JsonUtility.ToJson(newData);
-            File.WriteAllText(Application.dataPath + DATA_LOCATION + _guid + ".txt", data);
+            SetPassengerData(_guid, newData);
         }
     }
 
     public static void PassengerEnter(string _guid, StationNames _stationName)
     {
-        if(File.Exists(Application.dataPath + DATA_LOCATION + _guid + ".txt"))
+        if (IsPassengerExists(_guid))
         {
-            string data = File.ReadAllText(Application.dataPath + DATA_LOCATION + _guid + ".txt");
-            PassengerData passenger = JsonUtility.FromJson<PassengerData>(data);
+            PassengerData passenger = GetPassengerData(_guid);
 
-            if(!passenger.isOnBoard)
+            if (!passenger.isOnBoard)
             {
                 passenger.isOnBoard = true;
                 passenger.stationIn = _stationName;
+                SetPassengerData(_guid, passenger);
             }
             else
             {
@@ -41,9 +59,56 @@ public class Server
         }
     }
 
-    public static void CalculateBalance(float _balance, StationNames _station)
+    public static void ProcessTranstation(string _guid, StationNames _station, StationMatrix _matrix)
     {
+        if(IsPassengerExists(_guid))
+        {
+            PassengerData passenger = GetPassengerData(_guid);
 
+            if(passenger.balance >= 13)//TODO consider replacing magic number to lowest price on matrix
+            {
+                if (!passenger.isOnBoard)
+                {
+                    passenger.isOnBoard = true;
+                    passenger.stationIn = _station;
+                    SetPassengerData(_guid, passenger);
+                }
+                else
+                {
+                    passenger.isOnBoard = false;
+                    passenger.stationOut = _station;
+                    CalculateTransaction(passenger, _matrix, passenger.stationIn, passenger.stationOut);
+                    SetPassengerData(_guid, passenger);
+                }
+            }
+            else
+            {
+                Debug.LogError("Error: Insufficient Balance");
+            }
+        }
+        else
+        {
+            Debug.LogError("Error: Passenger unknown");
+        }
+    }
+
+    private static void CalculateTransaction(PassengerData _data, StationMatrix _matrix, StationNames _in, StationNames _out)
+    {
+        foreach (var s in _matrix.GetMatrix()[0].stationMatrices)//TODO array not necessary: Consider removing after changing Matrix[] to Matrix
+        {
+            if (s.from.Equals(_in))
+            {
+                foreach (var a in s.stationToStations)
+                {
+                    if (a.to.Equals(_out))
+                    {
+                        float price = a.price;
+                        _data.balance -= price;
+                        return;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -52,7 +117,7 @@ public class Server
     public string guid = "";
     public string name = "";
     public string pin = "";
-    public float balance = 0;
+    public float balance = 100f;
     public bool isOnBoard = false;
     public StationNames stationIn;
     public StationNames stationOut;

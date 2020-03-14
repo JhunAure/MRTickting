@@ -7,7 +7,6 @@ public class StationGate : MonoBehaviour
 {
     public static Action<bool> QRProcessed;
 
-    [SerializeField] StationNames currentStationName;
     [SerializeField] TextMeshProUGUI statusText = null;
     [SerializeField] Image statusImage = null;
 

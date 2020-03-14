@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class StationMatrix : MonoBehaviour
 {
-    [SerializeField] Matrix[] matrices;
+    [SerializeField] Matrix[] matrices; //TODO array not necessary: Consider removing to single Matrix
+
+    public Matrix[] GetMatrix()
+    {
+        return matrices;
+    }
 }
 
 [System.Serializable] public class Matrix

@@ -6,7 +6,9 @@ public class QRTranslator : MonoBehaviour
 {
     public static Action<bool> CameraDetecting;
 
-    [SerializeField] Renderer cameraRenderer;
+    [SerializeField] Renderer cameraRenderer = null;
+    [SerializeField] StationNames stationName;
+    [SerializeField] StationMatrix stationMatrix = null;
 
     bool isDetecting = true;
     WebCamTexture camTexture;
@@ -46,18 +48,14 @@ public class QRTranslator : MonoBehaviour
             if (barcodeResult != null)
             {
                 StationGate.QRProcessed?.Invoke(true);
-                DisplayDecodeQR(barcodeResult.Text);
+                Server.ProcessTranstation(barcodeResult.Text, stationName, stationMatrix);
+                Debug.Log($"Decoded from QR: {barcodeResult.Text}");
             }
         }
         catch(ZXing.FormatException e)
         {
             Debug.LogWarning(e.Message);
         }
-    }
-
-    private void DisplayDecodeQR(string decodedText)
-    {
-        Debug.Log($"Decoded from QR: {decodedText}");
     }
 
     private void PrepareCamera()
