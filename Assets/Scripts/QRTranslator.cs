@@ -9,13 +9,11 @@ public class QRTranslator : MonoBehaviour
     [SerializeField] Renderer cameraRenderer;
 
     bool isDetecting = true;
-
-    private Rect cameraViewRect;
-    private WebCamTexture camTexture;
+    WebCamTexture camTexture;
 
     private void Awake()
     {
-        StartCamera();
+        PrepareCamera();
     }
 
     private void OnEnable()
@@ -60,11 +58,6 @@ public class QRTranslator : MonoBehaviour
     private void DisplayDecodeQR(string decodedText)
     {
         Debug.Log($"Decoded from QR: {decodedText}");
-    }
-
-    private void StartCamera()
-    {
-        PrepareCamera();
     }
 
     private void PrepareCamera()

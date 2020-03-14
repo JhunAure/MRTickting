@@ -42,16 +42,6 @@ public class StationGate : MonoBehaviour
         QRTranslator.CameraDetecting?.Invoke(true);
     }
 
-    //private IEnumerator TransitionToResetStatuses()
-    //{
-    //    yield return new WaitUntil(() =>
-    //    {
-    //        currentTimeDelay -= Time.deltaTime;
-    //        return currentTimeDelay <= 0;
-    //    });
-    //    ResetStatuses();
-    //}
-
     public void OnExitSelected()
     {
         ResetStatuses();

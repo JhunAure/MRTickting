@@ -36,7 +36,7 @@ public class GenCode : MonoBehaviour
     //generates new qr code from text
     public Texture2D generateQR(string text)
     {
-        var encoded = new Texture2D(250, 250);
+        var encoded = new Texture2D(256, 256);
         var color32 = Encode(text, encoded.width, encoded.height);
         encoded.SetPixels32(color32);
         encoded.Apply();
