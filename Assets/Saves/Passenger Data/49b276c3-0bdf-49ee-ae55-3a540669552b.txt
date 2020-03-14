@@ -1,1 +1,0 @@
-{"guid":"49b276c3-0bdf-49ee-ae55-3a540669552b","name":"alfredo123","pin":"","balance":76.0,"isOnBoard":false,"stationIn":0,"stationOut":8}
