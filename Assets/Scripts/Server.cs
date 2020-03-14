@@ -4,9 +4,9 @@ using UnityEngine;
 using System.IO;
 using System;
 
-public class Server : MonoBehaviour
+public class Server
 {
-    private const string DATA_LOCATION = "/Passenger Data/";
+    private const string DATA_LOCATION = "/Saves/Passenger Data/";
 
     public static void SaveToDabase(string _guid, string _name, StationNames _stationName)
     {
@@ -15,22 +15,67 @@ public class Server : MonoBehaviour
             PassengerData newData = new PassengerData(){
                 guid = _guid,
                 name = _name,
-                stationName = _stationName
+                stationIn = _stationName
             };
             string data = JsonUtility.ToJson(newData);
             File.WriteAllText(Application.dataPath + DATA_LOCATION + _guid + ".txt", data);
         }
     }
+
+    public static void PassengerEnter(string _guid, StationNames _stationName)
+    {
+        if(File.Exists(Application.dataPath + DATA_LOCATION + _guid + ".txt"))
+        {
+            string data = File.ReadAllText(Application.dataPath + DATA_LOCATION + _guid + ".txt");
+            PassengerData passenger = JsonUtility.FromJson<PassengerData>(data);
+
+            if(!passenger.isOnBoard)
+            {
+                passenger.isOnBoard = true;
+                passenger.stationIn = _stationName;
+            }
+            else
+            {
+                Debug.LogError("Error: Already inside");
+            }
+        }
+    }
+
+    public static void CalculateBalance(float _balance, StationNames _station)
+    {
+
+    }
 }
 
 [Serializable] public class PassengerData
 {
-    public string guid;
-    public string name;
-    public string pin;
+    public string guid = "";
+    public string name = "";
+    public string pin = "";
+    public float balance = 0;
     public bool isOnBoard = false;
-    public StationNames stationName;
+    public StationNames stationIn;
+    public StationNames stationOut;
 }
+
+[Serializable] public enum StationNames
+{
+    NORTH_AVENUE,
+    QUEZON_AVE,
+    GMA_KAMUNING,
+    CUBAO,
+    SANTOLAN_ANNAPOLIS,
+    ORTIGAS,
+    SHAW_BOULEVARD,
+    BONI,
+    GUADALUPE,
+    BUENDIA,
+    AYALA,
+    MAGALLANES,
+    BACLARAN
+}
+
+
 
 /*
 using System.Collections;

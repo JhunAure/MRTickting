@@ -1,0 +1,417 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3558571312910861856
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3558571312910862047}
+  - component: {fileID: 3558571312910862046}
+  m_Layer: 0
+  m_Name: Fare Matrix
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3558571312910862047
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3558571312910861856}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.6487091, y: 0.05120305, z: -0.1015625}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3558571312910862046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3558571312910861856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43ce1d0ecf51b484da8335daa5e82da2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  matrices:
+  - stationMatrices:
+    - from: 0
+      stationToStations:
+      - to: 0
+        price: 0
+      - to: 1
+        price: 13
+      - to: 2
+        price: 13
+      - to: 3
+        price: 16
+      - to: 4
+        price: 16
+      - to: 5
+        price: 20
+      - to: 6
+        price: 20
+      - to: 7
+        price: 20
+      - to: 8
+        price: 24
+      - to: 9
+        price: 24
+      - to: 10
+        price: 24
+      - to: 11
+        price: 28
+      - to: 12
+        price: 28
+    - from: 1
+      stationToStations:
+      - to: 0
+        price: 13
+      - to: 1
+        price: 0
+      - to: 2
+        price: 13
+      - to: 3
+        price: 13
+      - to: 4
+        price: 16
+      - to: 5
+        price: 16
+      - to: 6
+        price: 20
+      - to: 7
+        price: 20
+      - to: 8
+        price: 20
+      - to: 9
+        price: 24
+      - to: 10
+        price: 24
+      - to: 11
+        price: 24
+      - to: 12
+        price: 28
+    - from: 2
+      stationToStations:
+      - to: 0
+        price: 13
+      - to: 1
+        price: 13
+      - to: 2
+        price: 0
+      - to: 3
+        price: 13
+      - to: 4
+        price: 13
+      - to: 5
+        price: 16
+      - to: 6
+        price: 16
+      - to: 7
+        price: 20
+      - to: 8
+        price: 20
+      - to: 9
+        price: 20
+      - to: 10
+        price: 24
+      - to: 11
+        price: 24
+      - to: 12
+        price: 24
+    - from: 3
+      stationToStations:
+      - to: 0
+        price: 13
+      - to: 1
+        price: 13
+      - to: 2
+        price: 13
+      - to: 3
+        price: 0
+      - to: 4
+        price: 13
+      - to: 5
+        price: 13
+      - to: 6
+        price: 16
+      - to: 7
+        price: 16
+      - to: 8
+        price: 20
+      - to: 9
+        price: 20
+      - to: 10
+        price: 20
+      - to: 11
+        price: 24
+      - to: 12
+        price: 24
+      - to: 12
+        price: 28
+      - to: 12
+        price: 28
+      - to: 12
+        price: 28
+    - from: 4
+      stationToStations:
+      - to: 0
+        price: 16
+      - to: 1
+        price: 16
+      - to: 2
+        price: 13
+      - to: 3
+        price: 13
+      - to: 4
+        price: 0
+      - to: 5
+        price: 13
+      - to: 6
+        price: 13
+      - to: 7
+        price: 16
+      - to: 8
+        price: 16
+      - to: 9
+        price: 20
+      - to: 10
+        price: 20
+      - to: 11
+        price: 20
+      - to: 12
+        price: 24
+    - from: 5
+      stationToStations:
+      - to: 0
+        price: 20
+      - to: 1
+        price: 16
+      - to: 2
+        price: 16
+      - to: 3
+        price: 13
+      - to: 4
+        price: 13
+      - to: 5
+        price: 0
+      - to: 6
+        price: 13
+      - to: 7
+        price: 13
+      - to: 8
+        price: 16
+      - to: 9
+        price: 16
+      - to: 10
+        price: 20
+      - to: 11
+        price: 20
+      - to: 12
+        price: 20
+    - from: 6
+      stationToStations:
+      - to: 0
+        price: 20
+      - to: 1
+        price: 20
+      - to: 2
+        price: 16
+      - to: 3
+        price: 16
+      - to: 4
+        price: 13
+      - to: 5
+        price: 13
+      - to: 6
+        price: 0
+      - to: 7
+        price: 13
+      - to: 8
+        price: 13
+      - to: 9
+        price: 16
+      - to: 10
+        price: 16
+      - to: 11
+        price: 20
+      - to: 12
+        price: 20
+    - from: 7
+      stationToStations:
+      - to: 0
+        price: 20
+      - to: 1
+        price: 20
+      - to: 2
+        price: 20
+      - to: 3
+        price: 16
+      - to: 4
+        price: 16
+      - to: 5
+        price: 13
+      - to: 6
+        price: 13
+      - to: 7
+        price: 0
+      - to: 8
+        price: 13
+      - to: 9
+        price: 13
+      - to: 10
+        price: 16
+      - to: 11
+        price: 16
+      - to: 12
+        price: 20
+    - from: 8
+      stationToStations:
+      - to: 0
+        price: 24
+      - to: 1
+        price: 20
+      - to: 2
+        price: 20
+      - to: 3
+        price: 20
+      - to: 4
+        price: 16
+      - to: 5
+        price: 16
+      - to: 6
+        price: 13
+      - to: 7
+        price: 13
+      - to: 8
+        price: 0
+      - to: 9
+        price: 13
+      - to: 10
+        price: 13
+      - to: 11
+        price: 16
+      - to: 12
+        price: 16
+    - from: 9
+      stationToStations:
+      - to: 0
+        price: 24
+      - to: 1
+        price: 24
+      - to: 2
+        price: 20
+      - to: 3
+        price: 20
+      - to: 4
+        price: 20
+      - to: 5
+        price: 16
+      - to: 6
+        price: 16
+      - to: 7
+        price: 13
+      - to: 8
+        price: 13
+      - to: 9
+        price: 0
+      - to: 10
+        price: 13
+      - to: 11
+        price: 13
+      - to: 12
+        price: 16
+    - from: 10
+      stationToStations:
+      - to: 0
+        price: 24
+      - to: 1
+        price: 24
+      - to: 2
+        price: 24
+      - to: 3
+        price: 20
+      - to: 4
+        price: 20
+      - to: 5
+        price: 20
+      - to: 6
+        price: 16
+      - to: 7
+        price: 16
+      - to: 8
+        price: 13
+      - to: 9
+        price: 13
+      - to: 10
+        price: 0
+      - to: 11
+        price: 13
+      - to: 12
+        price: 13
+    - from: 11
+      stationToStations:
+      - to: 0
+        price: 28
+      - to: 1
+        price: 24
+      - to: 2
+        price: 24
+      - to: 3
+        price: 24
+      - to: 4
+        price: 20
+      - to: 5
+        price: 20
+      - to: 6
+        price: 20
+      - to: 7
+        price: 16
+      - to: 8
+        price: 16
+      - to: 9
+        price: 13
+      - to: 10
+        price: 13
+      - to: 11
+        price: 0
+      - to: 12
+        price: 13
+    - from: 12
+      stationToStations:
+      - to: 0
+        price: 28
+      - to: 1
+        price: 28
+      - to: 2
+        price: 24
+      - to: 3
+        price: 24
+      - to: 4
+        price: 24
+      - to: 5
+        price: 20
+      - to: 6
+        price: 20
+      - to: 7
+        price: 20
+      - to: 8
+        price: 16
+      - to: 9
+        price: 16
+      - to: 10
+        price: 13
+      - to: 11
+        price: 13
+      - to: 12
+        price: 0
