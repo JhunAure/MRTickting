@@ -7,18 +7,8 @@ public class QRTranslator : MonoBehaviour
     public static Action<bool> CameraDetecting;
 
     [SerializeField] Renderer cameraRenderer;
-    //[SerializeField] RectTransform cameraViewer;
-    //[SerializeField] CameraDimension cameraDimension;
 
     bool isDetecting = true;
-
-    //[System.Serializable] struct CameraDimension
-    //{
-    //    public float posX;
-    //    public float posY;
-    //    public float width;
-    //    public float height;
-    //}
 
     private Rect cameraViewRect;
     private WebCamTexture camTexture;
@@ -48,8 +38,6 @@ public class QRTranslator : MonoBehaviour
 
     private void DrawCamera()
     {
-        //var newRect = new Rect(cameraDimension.posX, cameraDimension.posY, cameraDimension.width, cameraDimension.height);
-        //GUI.DrawTexture(newRect, camTexture, ScaleMode.ScaleToFit);
         cameraRenderer.material.mainTexture = camTexture;
 
         try
@@ -76,19 +64,8 @@ public class QRTranslator : MonoBehaviour
 
     private void StartCamera()
     {
-        //SetupCameraViewer();
         PrepareCamera();
     }
-
-    //private void SetupCameraViewer()
-    //{
-    //    Rect viewerRect = cameraViewer.rect;
-    //    float posX = viewerRect.x;
-    //    float posY = viewerRect.y;
-    //    float width = viewerRect.width;
-    //    float height = viewerRect.height;
-    //    cameraViewRect = new Rect(-(posX), -(posY), width, height);
-    //}
 
     private void PrepareCamera()
     {
