@@ -59,7 +59,7 @@ public class Server
         }
     }
 
-    public static void ProcessTranstation(string _guid, StationNames _station, StationMatrix _matrix)
+    public static void ProcessTransaction(string _guid, StationNames _station, StationMatrix _matrix)
     {
         if(IsPassengerExists(_guid))
         {
@@ -70,15 +70,29 @@ public class Server
                 if (!passenger.isOnBoard)
                 {
                     passenger.isOnBoard = true;
+                    passenger.intIsOnBoard = 1;
                     passenger.stationIn = _station;
                     SetPassengerData(_guid, passenger);
+                    StationGate.QRProcessed?.Invoke(true);
                 }
                 else
                 {
-                    passenger.isOnBoard = false;
                     passenger.stationOut = _station;
-                    CalculateTransaction(passenger, _matrix, passenger.stationIn, passenger.stationOut);
-                    SetPassengerData(_guid, passenger);
+                    bool isSuccessful = CalculateTransaction(passenger, _matrix, passenger.stationIn, passenger.stationOut);
+
+                    if(isSuccessful)
+                    {
+                        passenger.isOnBoard = false;
+                        passenger.intIsOnBoard = 0;
+                        SetPassengerData(_guid, passenger);
+                        StationGate.QRProcessed?.Invoke(true);
+                    }
+                    else
+                    {
+                        //TODO handle if balance is insufficient when exiting station
+                        StationGate.QRProcessed?.Invoke(false);
+                        Debug.LogError("Error: Insufficient Balance, please pay at the teller or load your account");
+                    }
                 }
             }
             else
@@ -92,7 +106,7 @@ public class Server
         }
     }
 
-    private static void CalculateTransaction(PassengerData _data, StationMatrix _matrix, StationNames _in, StationNames _out)
+    private static bool CalculateTransaction(PassengerData _data, StationMatrix _matrix, StationNames _in, StationNames _out)
     {
         foreach (var s in _matrix.GetMatrix()[0].stationMatrices)//TODO array not necessary: Consider removing after changing Matrix[] to Matrix
         {
@@ -102,13 +116,17 @@ public class Server
                 {
                     if (a.to.Equals(_out))
                     {
-                        float price = a.price;
-                        _data.balance -= price;
-                        return;
+                        if(_data.balance >= a.price)
+                        {
+                            float price = a.price;
+                            _data.balance -= price;
+                            return true;
+                        }
                     }
                 }
             }
         }
+        return false;
     }
 }
 
@@ -119,6 +137,7 @@ public class Server
     public string pin = "";
     public float balance = 100f;
     public bool isOnBoard = false;
+    public int intIsOnBoard = 0;
     public StationNames stationIn;
     public StationNames stationOut;
 }

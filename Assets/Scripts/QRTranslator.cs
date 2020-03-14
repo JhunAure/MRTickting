@@ -47,8 +47,7 @@ public class QRTranslator : MonoBehaviour
 
             if (barcodeResult != null)
             {
-                StationGate.QRProcessed?.Invoke(true);
-                Server.ProcessTranstation(barcodeResult.Text, stationName, stationMatrix);
+                Server.ProcessTransaction(barcodeResult.Text, stationName, stationMatrix);
                 Debug.Log($"Decoded from QR: {barcodeResult.Text}");
             }
         }
