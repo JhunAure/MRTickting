@@ -3,28 +3,53 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class MobileServer
+namespace Passenger
 {
-    private const string DATA_LOCATION = "/Mobile Saves/Passenger Data/";
-
-    private static PassengerData GetPassengerData(string _guid)
+    public class MobileServer
     {
-        string data = File.ReadAllText(Application.persistentDataPath + DATA_LOCATION + _guid + ".txt");
-        PassengerData passenger = JsonUtility.FromJson<PassengerData>(data);
-        return passenger;
-    }
+        private const string DATA_LOCATION = "/Mobile Saves/Passenger Data/";
 
-    private static void SetPassengerData(string _guid, PassengerData newData)
-    {
-        string data = JsonUtility.ToJson(newData);
-        File.WriteAllText(Application.persistentDataPath + DATA_LOCATION + _guid + ".txt", data);
-    }
-
-    public static void InitializeDataPath()
-    {
-        if (!Directory.Exists(Application.persistentDataPath + DATA_LOCATION))
+        public static void SaveQRCode(string _guid, PassengerData _data)
         {
-            Directory.CreateDirectory(Application.persistentDataPath + DATA_LOCATION);
+            var files = Directory.GetFiles(Application.persistentDataPath + DATA_LOCATION);
+            if(files.Length <= 0)
+            {
+                string data = JsonUtility.ToJson(_data);
+                File.WriteAllText(Application.persistentDataPath + DATA_LOCATION + _guid + ".txt", data);
+            }
+            else
+            {
+                Debug.LogError("There is already existing qr for this passenger");
+            }
         }
+
+        public static string GetQRCode()
+        {
+            if (Directory.Exists(Application.persistentDataPath + DATA_LOCATION))
+            {
+                var files = Directory.GetFiles(Application.persistentDataPath + DATA_LOCATION);
+
+                foreach (var _file in files) //returns the first filename in the array of files inside the Directory
+                {
+                    string data = File.ReadAllText(_file);
+                    PassengerData passengerData = JsonUtility.FromJson<PassengerData>(data);
+                    return passengerData.guid;
+                }
+            }
+            return null;
+        }
+
+        public static void InitializeDataPath()
+        {
+            if (!Directory.Exists(Application.persistentDataPath + DATA_LOCATION))
+            {
+                Directory.CreateDirectory(Application.persistentDataPath + DATA_LOCATION);
+            }
+        }
+    }
+
+    [System.Serializable] public struct PassengerData
+    {
+        public string guid;
     }
 }
