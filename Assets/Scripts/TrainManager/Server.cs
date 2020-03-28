@@ -17,7 +17,7 @@ namespace TrainManager
             return passenger;
         }
 
-        private static void SetPassengerData(string _guid, PassengerData newData)
+        private static void SetUpdatePassengerData(string _guid, PassengerData newData)
         {
             string data = JsonUtility.ToJson(newData);
             File.WriteAllText(Application.persistentDataPath + DATA_LOCATION + _guid + ".txt", data);
@@ -69,7 +69,7 @@ namespace TrainManager
                     name = _name,
                     stationIn = _stationName
                 };
-                SetPassengerData(_guid, newData);
+                SetUpdatePassengerData(_guid, newData);
             }
         }
 
@@ -83,12 +83,24 @@ namespace TrainManager
                 {
                     passenger.isOnBoard = true;
                     passenger.stationIn = _stationName;
-                    SetPassengerData(_guid, passenger);
+                    SetUpdatePassengerData(_guid, passenger);
                 }
                 else
                 {
                     Debug.LogError("Error: Already inside");
                 }
+            }
+        }
+
+        public static void LoadBalance(string _guid, float _amount)
+        {
+            if(IsPassengerExists(_guid))
+            {
+                PassengerData passenger = GetPassengerData(_guid);
+                passenger.balance += _amount;
+                SetUpdatePassengerData(_guid, passenger);
+                QRTranslator.OnLoadingBalance?.Invoke(false);
+                StationGate.QRProcessed?.Invoke(true, "", Color.cyan);
             }
         }
 
@@ -104,8 +116,8 @@ namespace TrainManager
                     {
                         passenger.isOnBoard = true;
                         passenger.stationIn = _station;
-                        SetPassengerData(_guid, passenger);
-                        StationGate.QRProcessed?.Invoke(true);
+                        SetUpdatePassengerData(_guid, passenger);
+                        StationGate.QRProcessed?.Invoke(true, "Accepted", Color.green);
                     }
                     else
                     {
@@ -115,13 +127,13 @@ namespace TrainManager
                         if (isSuccessful)
                         {
                             passenger.isOnBoard = false;
-                            SetPassengerData(_guid, passenger);
-                            StationGate.QRProcessed?.Invoke(true);
+                            SetUpdatePassengerData(_guid, passenger);
+                            StationGate.QRProcessed?.Invoke(true, "Accepted", Color.green);
                         }
                         else
                         {
                             //TODO handle if balance is insufficient when exiting station
-                            StationGate.QRProcessed?.Invoke(false);
+                            StationGate.QRProcessed?.Invoke(false, "Denied", Color.red);
                             Debug.LogError("Error: Insufficient Balance, please pay at the teller or load your account");
                         }
                     }
@@ -129,13 +141,13 @@ namespace TrainManager
                 else
                 {
                     Debug.LogError("Error: Insufficient Balance");
-                    StationGate.QRProcessed?.Invoke(false);
+                    StationGate.QRProcessed?.Invoke(false, "Denied", Color.red);
                 }
             }
             else
             {
                 Debug.LogError("Error: Passenger unknown");
-                StationGate.QRProcessed?.Invoke(false);
+                StationGate.QRProcessed?.Invoke(false, "Denied", Color.red);
             }
         }
     }

@@ -7,11 +7,13 @@ namespace TrainManager
     public class QRTranslator : MonoBehaviour
     {
         public static Action<bool> CameraDetecting;
+        public static Action<bool> OnLoadingBalance;
 
         [SerializeField] Renderer cameraRenderer = null;
         [SerializeField] StationNames stationName;
         [SerializeField] StationMatrix stationMatrix = null;
 
+        bool isLoadingBalance = false;
         bool isDetecting = true;
         WebCamTexture camTexture;
 
@@ -23,11 +25,13 @@ namespace TrainManager
         private void OnEnable()
         {
             CameraDetecting += SetIsCameraDetecting;
+            OnLoadingBalance += SetIsLoadingBalance;
         }
 
         private void OnDisable()
         {
             CameraDetecting -= SetIsCameraDetecting;
+            OnLoadingBalance += SetIsLoadingBalance;
         }
 
         private void OnGUI()
@@ -49,8 +53,19 @@ namespace TrainManager
 
                 if (barcodeResult != null)
                 {
-                    Server.ProcessTransaction(barcodeResult.Text, stationName, stationMatrix);
-                    Debug.Log($"Decoded from QR: {barcodeResult.Text}");
+                    if(!isLoadingBalance)
+                    {
+                        Server.ProcessTransaction(barcodeResult.Text, stationName, stationMatrix);
+                        Debug.Log($"Decoded from QR: {barcodeResult.Text}");
+                    }
+                    else
+                    {
+                        if(StationTeller.OnRequestLoadAmount != null)
+                        {
+                            Server.LoadBalance(barcodeResult.Text, StationTeller.OnRequestLoadAmount());
+                            Debug.Log($"Loaded balance {barcodeResult.Text}");
+                        }
+                    }
                 }
             }
             catch (ZXing.FormatException e)
@@ -73,6 +88,11 @@ namespace TrainManager
         private void SetIsCameraDetecting(bool status)
         {
             isDetecting = status;
+        }
+
+        private void SetIsLoadingBalance(bool status)
+        {
+            isLoadingBalance = status;
         }
     }
 

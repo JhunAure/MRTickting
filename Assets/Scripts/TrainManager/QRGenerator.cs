@@ -13,6 +13,16 @@ namespace TrainManager
         bool isDrawReady = false;
         string currentGUID = "";
 
+        void OnDisable()
+        {
+            QRTranslator.OnLoadingBalance += HideQRViewer;
+        }
+
+        void OnEnable()
+        {
+            QRTranslator.OnLoadingBalance += HideQRViewer;
+        }
+
         private void OnGUI()
         {
             if (isDrawReady)
@@ -23,6 +33,11 @@ namespace TrainManager
                     qrRenderer.material.mainTexture = newTexture;
                 }
             }
+        }
+
+        private void HideQRViewer(bool status)
+        {
+            qrRenderer.gameObject.SetActive(!status);
         }
 
         private Texture2D GenerateBarcode(string data, BarcodeFormat format, int width, int height)
@@ -48,7 +63,7 @@ namespace TrainManager
         {
             //add station ID, time and date stamp, passenger 4pins
             Guid newId = Guid.NewGuid();
-            Server.SaveToDabase(newId.ToString(), "alfredo123", StationNames.AYALA);
+            Server.SaveToDabase(newId.ToString(), "sample_name", StationNames.AYALA);
             return newId.ToString();
         }
 

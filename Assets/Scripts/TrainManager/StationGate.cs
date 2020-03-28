@@ -7,7 +7,7 @@ namespace TrainManager
 {
     public class StationGate : MonoBehaviour
     {
-        public static Action<bool> QRProcessed;
+        public static Action<bool, string, Color> QRProcessed;
 
         [SerializeField] TextMeshProUGUI statusText = null;
         [SerializeField] Image statusImage = null;
@@ -27,12 +27,12 @@ namespace TrainManager
             ResetStatuses();
         }
 
-        private void SetStatuses(bool _isAccepted)
+        private void SetStatuses(bool _isAccepted, string _msg, Color _color)
         {
-            string message = _isAccepted ? "Success" : "Failed";
-            Color color = _isAccepted ? Color.green : Color.red;
-            statusText.text = message;
-            statusImage.color = color;
+            //string message = _isAccepted ? "Success" : "Failed";
+            //Color color = _isAccepted ? Color.green : Color.red;
+            statusText.text = _msg;
+            statusImage.color = _color;
             QRTranslator.CameraDetecting?.Invoke(false);
         }
 
