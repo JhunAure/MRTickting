@@ -14,6 +14,7 @@ namespace TrainManager
         [SerializeField] GameObject newPassengerInputBox = null;
         [SerializeField] TMP_InputField pinInput = null;
         [SerializeField] StationNames stationName;
+        [SerializeField] TMP_Text stationNameText = null;
         [SerializeField] int minPinCount = 6;
         [SerializeField] int minNameCount = 4;
 
@@ -32,6 +33,14 @@ namespace TrainManager
         {
             QRTranslator.OnLoadingBalance -= SetLoadingInputBox;
             QRGenerator.OnSetNewPassenger -= SetNewPassengerInputBox;
+        }
+
+        void LateUpdate()
+        {
+            if(!stationNameText.text.Equals(GetStationName().ToString()))
+            {
+                stationNameText.text = GetStationName().ToString();
+            }
         }
 
         private void SetLoadingInputBox(bool status)

@@ -1987,6 +1987,9 @@ MonoBehaviour:
   newPassengerInputBox: {fileID: 114279587}
   pinInput: {fileID: 1984824232}
   stationName: 0
+  stationNameText: {fileID: 1169867386}
+  minPinCount: 6
+  minNameCount: 4
 --- !u!1 &986088879
 GameObject:
   m_ObjectHideFlags: 0
