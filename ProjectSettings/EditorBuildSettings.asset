@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MRT Station Scene.unity
     guid: 9cdab2459540362439e7b8fe6604e44e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Passenger Scene.unity
     guid: 08db8988481692d4aa91ce8f0228331b
   m_configObjects: {}

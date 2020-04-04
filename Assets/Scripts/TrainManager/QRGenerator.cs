@@ -7,20 +7,28 @@ namespace TrainManager
 {
     public class QRGenerator : MonoBehaviour
     {
+        public static Action<bool> OnSetNewPassenger;
+        public static Action OnResetBarcode;
+
         [SerializeField] Vector2Int qrDimension = new Vector2Int(512, 512);
         [SerializeField] Renderer qrRenderer = null;
+        [SerializeField] StationTeller stationTeller = null;
 
         bool isDrawReady = false;
         string currentGUID = "";
 
-        void OnDisable()
-        {
-            QRTranslator.OnLoadingBalance += HideQRViewer;
-        }
-
         void OnEnable()
         {
             QRTranslator.OnLoadingBalance += HideQRViewer;
+            QRGenerator.OnSetNewPassenger += HideQRViewer;
+            OnResetBarcode += ResetBarcodeDisplay;
+        }
+
+        void OnDisable()
+        {
+            QRTranslator.OnLoadingBalance -= HideQRViewer;
+            QRGenerator.OnSetNewPassenger -= HideQRViewer;
+            OnResetBarcode -= ResetBarcodeDisplay;
         }
 
         private void OnGUI()
@@ -31,6 +39,7 @@ namespace TrainManager
                 {
                     Texture2D newTexture = GenerateBarcode(currentGUID, BarcodeFormat.QR_CODE, qrDimension.x, qrDimension.y);
                     qrRenderer.material.mainTexture = newTexture;
+                    isDrawReady = false;
                 }
             }
         }
@@ -38,6 +47,7 @@ namespace TrainManager
         private void HideQRViewer(bool status)
         {
             qrRenderer.gameObject.SetActive(!status);
+            stationTeller.SetInterfaceButtons(!status);
         }
 
         private Texture2D GenerateBarcode(string data, BarcodeFormat format, int width, int height)
@@ -61,17 +71,44 @@ namespace TrainManager
 
         private string GenerateUniqueCode()
         {
-            //add station ID, time and date stamp, passenger 4pins
-            Guid newId = Guid.NewGuid();
-            Server.SaveToDabase(newId.ToString(), "sample_name", StationNames.AYALA);
-            return newId.ToString();
+            string passengerName = stationTeller.GetPassengerName();
+            string pin = stationTeller.GetPin();
+            string date = System.DateTime.Today.ToShortDateString();
+            int stationId = (int)stationTeller.GetStationName();
+            string newGUID = ProcessGUID(passengerName, stationId, date);
+            Server.SaveToDabase(newGUID, passengerName, StationNames.AYALA, date, pin);
+            isDrawReady = true;
+            return newGUID;
         }
 
+        private string ProcessGUID(string _passengerName, int _stationId, string _date)
+        {
+            string newId = Guid.NewGuid().ToString();
+            string[] newIds = newId.Split('-');
+            _passengerName = string.IsNullOrEmpty(_passengerName)? "Unknown": _passengerName;
+            _passengerName = _passengerName.Replace(' ', '_').ToLower();
+            _date = _date.Replace("/", string.Empty);
+            newId = string.Concat(_passengerName, "-", _stationId,'-', newIds[0], '-', _date);
+            return newId;
+        }
+
+        private void ResetBarcodeDisplay()
+        {
+            qrRenderer.material.mainTexture = null;
+            currentGUID = "";
+            Debug.Log("Reset Barcode");
+        }
+
+        #region Unity Button Click Events
         public void OnGenerateSelected()
         {
+            if(!stationTeller.isInputsValid()) return;
             currentGUID = GenerateUniqueCode();
-            isDrawReady = true;
-            Debug.LogWarning(currentGUID);
+            stationTeller.SetInputFields(false);
+            stationTeller.SetInterfaceButtons(true);
+            HideQRViewer(false);
+            Debug.Log($"Generated GUID: {currentGUID}");
         }
+        #endregion
     }
 }

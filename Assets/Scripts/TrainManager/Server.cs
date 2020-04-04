@@ -30,7 +30,7 @@ namespace TrainManager
 
         private static bool CalculateTransaction(PassengerData _data, StationMatrix _matrix, StationNames _in, StationNames _out)
         {
-            foreach (var s in _matrix.GetMatrix()[0].stationMatrices)//TODO array not necessary: Consider removing after changing Matrix[] to Matrix
+            foreach (var s in _matrix.GetMatrix()[0].stationMatrices)
             {
                 if (s.from.Equals(_in))
                 {
@@ -59,7 +59,7 @@ namespace TrainManager
             }
         }
 
-        public static void SaveToDabase(string _guid, string _name, StationNames _stationName)
+        public static void SaveToDabase(string _guid, string _name, StationNames _stationName, string _date, string _pin)
         {
             if (!IsPassengerExists(_guid))
             {
@@ -67,7 +67,9 @@ namespace TrainManager
                 {
                     guid = _guid,
                     name = _name,
-                    stationIn = _stationName
+                    stationIn = _stationName,
+                    date = _date,
+                    pin = _pin
                 };
                 SetUpdatePassengerData(_guid, newData);
             }
@@ -157,6 +159,7 @@ namespace TrainManager
         public string guid = "";
         public string name = "";
         public string pin = "";
+        public string date = "";
         public float balance = 100f;
         public bool isOnBoard = false;
         public StationNames stationIn;

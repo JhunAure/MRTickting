@@ -10,8 +10,8 @@ namespace TrainManager
         public static Action<bool> OnLoadingBalance;
 
         [SerializeField] Renderer cameraRenderer = null;
-        [SerializeField] StationNames stationName;
         [SerializeField] StationMatrix stationMatrix = null;
+        [SerializeField] StationTeller stationTeller = null;
 
         bool isLoadingBalance = false;
         bool isDetecting = true;
@@ -53,17 +53,21 @@ namespace TrainManager
 
                 if (barcodeResult != null)
                 {
+                    QRGenerator.OnResetBarcode?.Invoke();
+
                     if(!isLoadingBalance)
                     {
-                        Server.ProcessTransaction(barcodeResult.Text, stationName, stationMatrix);
-                        Debug.Log($"Decoded from QR: {barcodeResult.Text}");
+                        Server.ProcessTransaction(barcodeResult.Text, stationTeller.GetStationName(), stationMatrix);
                     }
                     else
                     {
-                        if(StationTeller.OnRequestLoadAmount != null)
+                        if(stationTeller.GetLoadAmount() > 0)
                         {
-                            Server.LoadBalance(barcodeResult.Text, StationTeller.OnRequestLoadAmount());
-                            Debug.Log($"Loaded balance {barcodeResult.Text}");
+                            Server.LoadBalance(barcodeResult.Text, stationTeller.GetLoadAmount());
+                        }
+                        else
+                        {
+                            Debug.LogError("Invalid input amount");
                         }
                     }
                 }
