@@ -9,10 +9,19 @@ namespace Passenger
         [SerializeField] GameObject scanButton = null;
         [SerializeField] GameObject displayQRButton = null;
 
-        private void SetButtons(bool isScanning)
+        void Start()
         {
-            scanButton.SetActive(!isScanning);
-            displayQRButton.SetActive(isScanning);
+            SetButtons(false);
+        }
+
+        private void SetButtons(bool status)
+        {
+            if (MobileServer.IsQRCodeExists())
+            {
+                status = true;
+            }
+            scanButton.SetActive(!status);
+            displayQRButton.SetActive(status);
         }
 
         public void OnQRScanSelected()

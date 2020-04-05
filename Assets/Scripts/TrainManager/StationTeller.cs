@@ -8,12 +8,13 @@ namespace TrainManager
 {
     public class StationTeller : MonoBehaviour
     {
+        [SerializeField] StationNames stationName;
         [SerializeField] GameObject loadButton = null;
         [SerializeField] GameObject newPassengerButton = null;
+        [SerializeField] GameObject clearDisplayButton = null;
         [SerializeField] GameObject loadInputBox = null;
         [SerializeField] GameObject newPassengerInputBox = null;
         [SerializeField] TMP_InputField pinInput = null;
-        [SerializeField] StationNames stationName;
         [SerializeField] TMP_Text stationNameText = null;
         [SerializeField] int minPinCount = 6;
         [SerializeField] int minNameCount = 4;
@@ -69,6 +70,7 @@ namespace TrainManager
         {
             loadButton.SetActive(status);
             newPassengerButton.SetActive(status);
+            clearDisplayButton.SetActive(status);
         }
 
         public void SetInputFields(bool status)
@@ -113,6 +115,7 @@ namespace TrainManager
             }
             return true;
         }
+
         #region Unity Button Click Events
         public void OnCreateNewPassenger()
         {

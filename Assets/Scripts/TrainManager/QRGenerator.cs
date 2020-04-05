@@ -2,6 +2,7 @@
 using ZXing;
 using ZXing.Common;
 using System;
+using System.Security.Cryptography;
 
 namespace TrainManager
 {
@@ -75,20 +76,22 @@ namespace TrainManager
             string pin = stationTeller.GetPin();
             string date = System.DateTime.Today.ToShortDateString();
             int stationId = (int)stationTeller.GetStationName();
-            string newGUID = ProcessGUID(passengerName, stationId, date);
+            string newGUID = ProcessGUID(passengerName, stationId, date, pin);
             Server.SaveToDabase(newGUID, passengerName, StationNames.AYALA, date, pin);
             isDrawReady = true;
             return newGUID;
         }
 
-        private string ProcessGUID(string _passengerName, int _stationId, string _date)
+        //PassengerName-StationID-GUID-Date-Pin
+        private string ProcessGUID(string _passengerName, int _stationId, string _date, string _pin)
         {
+            //TODO: Hash pin
             string newId = Guid.NewGuid().ToString();
             string[] newIds = newId.Split('-');
             _passengerName = string.IsNullOrEmpty(_passengerName)? "Unknown": _passengerName;
             _passengerName = _passengerName.Replace(' ', '_').ToLower();
             _date = _date.Replace("/", string.Empty);
-            newId = string.Concat(_passengerName, "-", _stationId,'-', newIds[0], '-', _date);
+            newId = string.Concat(_passengerName, "-", _stationId,'-', newIds[0], '-', _date, '-', _pin);
             return newId;
         }
 
@@ -96,7 +99,6 @@ namespace TrainManager
         {
             qrRenderer.material.mainTexture = null;
             currentGUID = "";
-            Debug.Log("Reset Barcode");
         }
 
         #region Unity Button Click Events

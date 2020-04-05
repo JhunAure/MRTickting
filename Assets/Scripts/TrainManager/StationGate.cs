@@ -11,6 +11,10 @@ namespace TrainManager
 
         [SerializeField] TextMeshProUGUI statusText = null;
         [SerializeField] Image statusImage = null;
+        [SerializeField] GameObject messageContatiner = null;
+        [SerializeField] TMP_Text passengerNameMsgText = null;
+        [SerializeField] TMP_Text descriptionMsgText = null;
+        [SerializeField] TMP_Text amountMsgText = null;
 
         private void OnEnable()
         {
@@ -41,6 +45,18 @@ namespace TrainManager
             statusText.text = "Stand by...";
             statusImage.color = Color.black;
             QRTranslator.CameraDetecting?.Invoke(true);
+        }
+
+        public void SetMessagesDisplay(bool isActive, string passengerName, string descriptionMsg, string amountMsg, Color color)
+        {
+            messageContatiner.SetActive(isActive);
+            passengerNameMsgText.text = passengerName;
+            descriptionMsgText.text = descriptionMsg;
+            amountMsgText.text = amountMsg;
+            
+            passengerNameMsgText.color = color;
+            descriptionMsgText.color = color;
+            amountMsgText.color = color;
         }
 
         public void OnExitSelected()

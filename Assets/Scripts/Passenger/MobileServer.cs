@@ -9,10 +9,15 @@ namespace Passenger
     {
         private const string DATA_LOCATION = "/Mobile Saves/Passenger Data/";
 
-        public static void SaveQRCode(string _guid, PassengerData _data)
+        public static bool IsQRCodeExists()
         {
             var files = Directory.GetFiles(Application.persistentDataPath + DATA_LOCATION);
-            if(files.Length <= 0)
+            return files.Length > 0;
+        }
+
+        public static void SaveQRCode(string _guid, PassengerData _data)
+        {
+            if(!IsQRCodeExists())
             {
                 string data = JsonUtility.ToJson(_data);
                 File.WriteAllText(Application.persistentDataPath + DATA_LOCATION + _guid + ".txt", data);
@@ -21,6 +26,7 @@ namespace Passenger
             {
                 Debug.LogError("There is already existing qr for this passenger");
             }
+            MobileQRController.CameraDetecting?.Invoke(false);
         }
 
         public static string GetQRCode()

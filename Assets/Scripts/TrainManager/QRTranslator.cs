@@ -12,6 +12,7 @@ namespace TrainManager
         [SerializeField] Renderer cameraRenderer = null;
         [SerializeField] StationMatrix stationMatrix = null;
         [SerializeField] StationTeller stationTeller = null;
+        [SerializeField] StationGate stationGate = null;
 
         bool isLoadingBalance = false;
         bool isDetecting = true;
@@ -57,18 +58,11 @@ namespace TrainManager
 
                     if(!isLoadingBalance)
                     {
-                        Server.ProcessTransaction(barcodeResult.Text, stationTeller.GetStationName(), stationMatrix);
+                        Server.ProcessTransaction(barcodeResult.Text, stationTeller.GetStationName(), stationMatrix, SetDisplayMessages);
                     }
                     else
                     {
-                        if(stationTeller.GetLoadAmount() > 0)
-                        {
-                            Server.LoadBalance(barcodeResult.Text, stationTeller.GetLoadAmount());
-                        }
-                        else
-                        {
-                            Debug.LogError("Invalid input amount");
-                        }
+                        Server.LoadBalance(barcodeResult.Text, stationTeller.GetLoadAmount(), SetDisplayMessages);
                     }
                 }
             }
@@ -76,6 +70,11 @@ namespace TrainManager
             {
                 Debug.LogWarning(e.Message);
             }
+        }
+
+        private void SetDisplayMessages(bool isActive, string passengerName, string descriptionMsg, string amountMsg, Color color)
+        {
+            stationGate.SetMessagesDisplay(isActive, passengerName, descriptionMsg, amountMsg, color);
         }
 
         private void PrepareCamera()
@@ -92,6 +91,11 @@ namespace TrainManager
         private void SetIsCameraDetecting(bool status)
         {
             isDetecting = status;
+
+            if(isDetecting)
+            {
+                SetDisplayMessages(false, "", "", "", Color.black);
+            }
         }
 
         private void SetIsLoadingBalance(bool status)

@@ -25,7 +25,6 @@ namespace Passenger
         private void Awake()
         {
             MobileServer.InitializeDataPath();
-            PrepareCamera();
         }
 
         private void OnEnable()
@@ -42,7 +41,7 @@ namespace Passenger
 
         private void Start()
         {
-            
+            PrepareCamera();
         }
 
         private void OnGUI()
@@ -64,12 +63,12 @@ namespace Passenger
             {
                 Texture2D newTexture = GenerateBarcode(currentGUID, BarcodeFormat.QR_CODE, qrDimension.x, qrDimension.y);
                 qrCodeRenderer.material.mainTexture = newTexture;
-                isDrawReady = false;
             }
             else
             {
                 Debug.LogError("there is no Qr code saved at the moment");
             }
+            isDrawReady = false;
         }
 
         private Texture2D GenerateBarcode(string data, BarcodeFormat format, int width, int height)
@@ -142,9 +141,9 @@ namespace Passenger
 
         private void SetIsQRCodeDrawing(bool status)
         {
-            isDrawReady = status;
-            qrCodeRenderer.gameObject.SetActive(isDrawReady);
             currentGUID = MobileServer.GetQRCode();
+            qrCodeRenderer.gameObject.SetActive(status);
+            isDrawReady = status;
         }
     }
 }

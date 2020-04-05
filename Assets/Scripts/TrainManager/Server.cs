@@ -8,6 +8,8 @@ namespace TrainManager
 {
     public class Server
     {
+        public delegate void OnSetDisplayMessage(bool isActive, string name, string desc, string amount, Color color);
+
         private const string DATA_LOCATION = "/Saves/Passenger Data/";
 
         private static PassengerData GetPassengerData(string _guid)
@@ -94,19 +96,34 @@ namespace TrainManager
             }
         }
 
-        public static void LoadBalance(string _guid, float _amount)
+        public static void LoadBalance(string _guid, float _amount, OnSetDisplayMessage onComplete = null)
         {
-            if(IsPassengerExists(_guid))
+            if (IsPassengerExists(_guid))
             {
                 PassengerData passenger = GetPassengerData(_guid);
-                passenger.balance += _amount;
-                SetUpdatePassengerData(_guid, passenger);
-                QRTranslator.OnLoadingBalance?.Invoke(false);
-                StationGate.QRProcessed?.Invoke(true, "", Color.cyan);
+
+                if (_amount > 0)
+                {
+                    passenger.balance += _amount;
+                    SetUpdatePassengerData(_guid, passenger);
+                    QRTranslator.OnLoadingBalance?.Invoke(false);
+                    StationGate.QRProcessed?.Invoke(true, "Load Success", Color.cyan);
+                    onComplete?.Invoke(true, passenger.name, "Thankyou!, your current balance is", passenger.balance.ToString(), Color.cyan);
+                }
+                else
+                {
+                    StationGate.QRProcessed?.Invoke(true, "Load Failed", Color.red);
+                    onComplete?.Invoke(true, passenger.name, "Sorry invalid input amount", "Please try again", Color.red);
+                }
+            }
+            else
+            {
+                StationGate.QRProcessed?.Invoke(true, "Denied", Color.red);
+                onComplete?.Invoke(true, "Unknown", "QR Code is not registered in this system", "Please register at the teller", Color.red);
             }
         }
 
-        public static void ProcessTransaction(string _guid, StationNames _station, StationMatrix _matrix)
+        public static void ProcessTransaction(string _guid, StationNames _station, StationMatrix _matrix, OnSetDisplayMessage onComplete = null)
         {
             if (IsPassengerExists(_guid))
             {
@@ -120,6 +137,7 @@ namespace TrainManager
                         passenger.stationIn = _station;
                         SetUpdatePassengerData(_guid, passenger);
                         StationGate.QRProcessed?.Invoke(true, "Accepted", Color.green);
+                        onComplete?.Invoke(true, passenger.name, "Welcome!, your current balance is: ", passenger.balance.ToString(), Color.green);
                     }
                     else
                     {
@@ -131,25 +149,26 @@ namespace TrainManager
                             passenger.isOnBoard = false;
                             SetUpdatePassengerData(_guid, passenger);
                             StationGate.QRProcessed?.Invoke(true, "Accepted", Color.green);
+                            onComplete?.Invoke(true, passenger.name, "Thankyou!, your current balance is: ", passenger.balance.ToString(), Color.green);
                         }
                         else
                         {
                             //TODO handle if balance is insufficient when exiting station
                             StationGate.QRProcessed?.Invoke(false, "Denied", Color.red);
-                            Debug.LogError("Error: Insufficient Balance, please pay at the teller or load your account");
+                            onComplete?.Invoke(true, passenger.name, "Sorry your current balance is insufficient, please load at the teller: ", passenger.balance.ToString(), Color.red);
                         }
                     }
                 }
                 else
                 {
-                    Debug.LogError("Error: Insufficient Balance");
                     StationGate.QRProcessed?.Invoke(false, "Denied", Color.red);
+                    onComplete?.Invoke(true, passenger.name, "Sorry your current balance is insufficient, please load at the teller: ", passenger.balance.ToString(), Color.red);
                 }
             }
             else
             {
-                Debug.LogError("Error: Passenger unknown");
                 StationGate.QRProcessed?.Invoke(false, "Denied", Color.red);
+                onComplete?.Invoke(true, "Unknown", "QR Code is not registered in this system", "Please register at the teller", Color.red);
             }
         }
     }
