@@ -42,7 +42,7 @@ namespace TrainManager
                         {
                             if (_data.balance >= a.price)
                             {
-                                float price = a.price;
+                                float price = a.price == 0? 13: a.price; //Deduct 13 if in and out is the same station
                                 _data.balance -= price;
                                 return true;
                             }

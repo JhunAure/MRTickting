@@ -9,6 +9,8 @@ namespace TrainManager
     public class StationTeller : MonoBehaviour
     {
         [SerializeField] StationNames stationName;
+        [SerializeField] StationMatrix stationMatrix = null;
+        [SerializeField] TMP_Dropdown stationSelector = null;
         [SerializeField] GameObject loadButton = null;
         [SerializeField] GameObject newPassengerButton = null;
         [SerializeField] GameObject clearDisplayButton = null;
@@ -36,11 +38,15 @@ namespace TrainManager
             QRGenerator.OnSetNewPassenger -= SetNewPassengerInputBox;
         }
 
-        void LateUpdate()
+        void Start()
         {
-            if(!stationNameText.text.Equals(GetStationName().ToString()))
+            var stations = stationMatrix.GetMatrix();
+
+            for(int i = 0; i < stations[0].stationMatrices.Length; i++)
             {
-                stationNameText.text = GetStationName().ToString();
+                var newItem = new TMP_Dropdown.OptionData();
+                newItem.text = stations[0].stationMatrices[i].from.ToString();
+                stationSelector.options.Add(newItem);
             }
         }
 
@@ -94,7 +100,9 @@ namespace TrainManager
 
         public StationNames GetStationName()
         {
-            return stationName;
+            int i = stationSelector.value;
+            StationNames parsedEnum = (StationNames)Enum.Parse(typeof(StationNames), stationSelector.options[i].text);
+            return parsedEnum;
         }
 
         public string GetPin()
@@ -116,7 +124,13 @@ namespace TrainManager
             return true;
         }
 
-        #region Unity Button Click Events
+        #region Unity Events
+
+        public void OnChangeStationSelectorValue()
+        {
+            Debug.Log(GetStationName().ToString());
+        }
+
         public void OnCreateNewPassenger()
         {
             QRGenerator.OnSetNewPassenger?.Invoke(true);
