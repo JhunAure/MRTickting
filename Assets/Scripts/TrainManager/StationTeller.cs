@@ -77,6 +77,7 @@ namespace TrainManager
             loadButton.SetActive(status);
             newPassengerButton.SetActive(status);
             clearDisplayButton.SetActive(status);
+            stationSelector.gameObject.SetActive(status);
         }
 
         public void SetInputFields(bool status)
@@ -156,6 +157,11 @@ namespace TrainManager
         public void OnClearBarcodeSelected()
         {
             QRGenerator.OnResetBarcode?.Invoke();
+        }
+
+        public void CloseAppSelected()
+        {
+            Application.Quit();
         }
         #endregion
     }

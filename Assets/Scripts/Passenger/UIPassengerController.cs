@@ -37,6 +37,10 @@ namespace Passenger
             MobileQRController.CameraDetecting?.Invoke(false);
             MobileQRController.QRDisplaying?.Invoke(true);
         }
-    }
 
+        public void OnCloseAppSelected()
+        {
+            Application.Quit();
+        }
+    }
 }
